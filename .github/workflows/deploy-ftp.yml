@@ -1,23 +1,26 @@
-name: Deploy via FTP
+name: Deploy EFRISBuddy Admin via FTP
 
 on:
+    #pull_request:
+    #   branches:
+    #      - production
+    # types:
+    #    - closed
     push:
         branches:
             - main
-            - master
-    workflow_dispatch:
 
 jobs:
-    ftp-deploy:
+    deploy:
         runs-on: ubuntu-latest
         env:
             FTP_HOST: ${{ secrets.FTP_HOST != '' && secrets.FTP_HOST || vars.FTP_HOST }}
-            FTP_USER: ${{ secrets.FTP_USER != '' && secrets.FTP_USER || vars.FTP_USER }}
+            FTP_USER: ${{ secrets.FTP_USER != '' && secrets.FTP_USER || secrets.FTP_USERNAME != '' && secrets.FTP_USERNAME || vars.FTP_USER != '' && vars.FTP_USER || vars.FTP_USERNAME }}
             FTP_PSWD: ${{ secrets.FTP_PSWD != '' && secrets.FTP_PSWD || vars.FTP_PSWD }}
             FTP_PORT: ${{ secrets.FTP_PORT != '' && secrets.FTP_PORT || vars.FTP_PORT }}
 
         steps:
-            - name: Checkout repository
+            - name: Checkout Repository
               uses: actions/checkout@v4
 
             - name: Validate required FTP settings
@@ -30,8 +33,8 @@ jobs:
                     exit 1
                   fi
                   if [ -z "${FTP_USER}" ]; then
-                    echo "Missing FTP_USER in GitHub Secrets/Variables"
-                    echo "Add FTP_USER in Settings > Secrets and variables > Actions"
+                    echo "Missing FTP_USER or FTP_USERNAME in GitHub Secrets/Variables"
+                    echo "Add FTP_USER (or FTP_USERNAME) in Settings > Secrets and variables > Actions"
                     exit 1
                   fi
                   if [ -z "${FTP_PSWD}" ]; then
@@ -40,7 +43,7 @@ jobs:
                     exit 1
                   fi
 
-            - name: Upload files to FTP server
+            - name: Deploy to FTP
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
                   server: ${{ env.FTP_HOST }}
@@ -50,6 +53,7 @@ jobs:
                   protocol: ftp
                   local-dir: ./
                   server-dir: /
+                  dangerous-clean-slate: true
                   exclude: |
                       **/.git/**
                       **/.github/**
