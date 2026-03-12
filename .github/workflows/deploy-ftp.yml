@@ -1,0 +1,33 @@
+name: Deploy via FTP
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    ftp-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Upload files to FTP server
+              uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+              with:
+                  server: ${{ secrets.FTP_HOST }}
+                  username: ${{ secrets.FTP_USER }}
+                  password: ${{ secrets.FTP_PSWD }}
+                  port: ${{ secrets.FTP_PORT }}
+                  protocol: ftp
+                  local-dir: ./
+                  server-dir: /
+                  exclude: |
+                      **/.git/**
+                      **/.github/**
+                      **/.gitignore
+                      **/.DS_Store
+                      **/node_modules/**
+                      **/vendor/**
