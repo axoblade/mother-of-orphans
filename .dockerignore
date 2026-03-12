@@ -1,0 +1,11 @@
+.git
+.gitignore
+.DS_Store
+node_modules
+**/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+unused-images-*.txt
+used-images-report.txt
+referenced-image-tokens.txt
