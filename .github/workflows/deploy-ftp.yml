@@ -4,23 +4,49 @@ on:
     push:
         branches:
             - main
+            - master
     workflow_dispatch:
 
 jobs:
     ftp-deploy:
         runs-on: ubuntu-latest
+        env:
+            FTP_HOST: ${{ secrets.FTP_HOST != '' && secrets.FTP_HOST || vars.FTP_HOST }}
+            FTP_USER: ${{ secrets.FTP_USER != '' && secrets.FTP_USER || vars.FTP_USER }}
+            FTP_PSWD: ${{ secrets.FTP_PSWD != '' && secrets.FTP_PSWD || vars.FTP_PSWD }}
+            FTP_PORT: ${{ secrets.FTP_PORT != '' && secrets.FTP_PORT || vars.FTP_PORT }}
 
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Validate required FTP settings
+              shell: bash
+              run: |
+                  set -e
+                  if [ -z "${FTP_HOST}" ]; then
+                    echo "Missing FTP_HOST in GitHub Secrets/Variables"
+                    echo "Add FTP_HOST in Settings > Secrets and variables > Actions"
+                    exit 1
+                  fi
+                  if [ -z "${FTP_USER}" ]; then
+                    echo "Missing FTP_USER in GitHub Secrets/Variables"
+                    echo "Add FTP_USER in Settings > Secrets and variables > Actions"
+                    exit 1
+                  fi
+                  if [ -z "${FTP_PSWD}" ]; then
+                    echo "Missing FTP_PSWD in GitHub Secrets/Variables"
+                    echo "Add FTP_PSWD in Settings > Secrets and variables > Actions"
+                    exit 1
+                  fi
+
             - name: Upload files to FTP server
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
               with:
-                  server: ${{ secrets.FTP_HOST }}
-                  username: ${{ secrets.FTP_USER }}
-                  password: ${{ secrets.FTP_PSWD }}
-                  port: ${{ secrets.FTP_PORT }}
+                  server: ${{ env.FTP_HOST }}
+                  username: ${{ env.FTP_USER }}
+                  password: ${{ env.FTP_PSWD }}
+                  port: ${{ env.FTP_PORT }}
                   protocol: ftp
                   local-dir: ./
                   server-dir: /
