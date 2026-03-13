@@ -3,6 +3,9 @@ FROM php:8.2-apache
 # Keep Apache document root on /var/www/html (default).
 WORKDIR /var/www/html
 
+# Enable rewrite rules used in .htaccess.
+RUN a2enmod rewrite
+
 # Copy site files into the container.
 COPY . /var/www/html/
 
