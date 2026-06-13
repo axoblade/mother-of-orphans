@@ -6,6 +6,7 @@ export default async function CausesPreview() {
 	let causes: {
 		_id: string;
 		title: string;
+		slug: string;
 		summary: string;
 		image: string;
 		goal: number;
@@ -21,6 +22,7 @@ export default async function CausesPreview() {
 		causes = (raw as any[]).map((c: any) => ({
 			_id: String(c._id),
 			title: String(c.title || ""),
+			slug: String(c.slug || ""),
 			summary: String(c.summary || ""),
 			image: String(c.image || ""),
 			goal: Number(c.goal || 0),
@@ -32,6 +34,7 @@ export default async function CausesPreview() {
 			{
 				_id: "1",
 				title: "Education for Orphans",
+				slug: "education-for-orphans",
 				summary:
 					"Providing school fees, books, and uniforms to orphaned children in Uganda.",
 				image: "/images/causes/education.jpg",
@@ -41,6 +44,7 @@ export default async function CausesPreview() {
 			{
 				_id: "2",
 				title: "Clean Water Initiative",
+				slug: "clean-water-initiative",
 				summary: "Building boreholes and water systems for rural communities.",
 				image: "/images/causes/education.jpg",
 				goal: 15000,
@@ -49,6 +53,7 @@ export default async function CausesPreview() {
 			{
 				_id: "3",
 				title: "Food & Nutrition Program",
+				slug: "food-nutrition-program",
 				summary:
 					"Providing nutritious meals to orphanages and displaced families.",
 				image: "/images/causes/education.jpg",
@@ -78,9 +83,10 @@ export default async function CausesPreview() {
 								? Math.round((cause.raised / cause.goal) * 100)
 								: 0;
 						return (
-							<div
+							<Link
 								key={cause._id}
-								className='bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow'
+								href={`/causes/${cause.slug}`}
+								className='bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow block'
 							>
 								<div className='h-48 bg-gray-200 overflow-hidden'>
 									<img
@@ -116,7 +122,7 @@ export default async function CausesPreview() {
 										</span>
 									</div>
 								</div>
-							</div>
+							</Link>
 						);
 					})}
 				</div>

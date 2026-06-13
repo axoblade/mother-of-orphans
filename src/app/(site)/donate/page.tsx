@@ -28,6 +28,7 @@ function DonateContent() {
 	const [merchantRef, setMerchantRef] = useState<string | null>(null);
 	const [polling, setPolling] = useState(false);
 	const [completed, setCompleted] = useState(false);
+	const [causeName, setCauseName] = useState("");
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 	const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -38,6 +39,13 @@ function DonateContent() {
 			.then((data) => setPesapalReady(data.plugins?.pesapal?.enabled ?? false))
 			.catch(() => setPesapalReady(false));
 	}, []);
+
+	// Prefill cause from query params
+	useEffect(() => {
+		const cause = searchParams.get("cause");
+		const name = searchParams.get("causeName");
+		if (name) setCauseName(name);
+	}, [searchParams]);
 
 	// Check for return from PesaPal via query params
 	useEffect(() => {
@@ -84,7 +92,9 @@ function DonateContent() {
 					donorName: donorName || undefined,
 					donorEmail: donorEmail || undefined,
 					donorPhone: donorPhone || undefined,
-					description: `Donation to Mother of Orphans - $${selectedAmount}`,
+					description: causeName
+						? `Donation to "${causeName}" - $${selectedAmount}`
+						: `Donation to Mother of Orphans - $${selectedAmount}`,
 				}),
 			});
 
@@ -236,9 +246,11 @@ function DonateContent() {
 				<div className='absolute inset-0 bg-linear-to-r from-dark to-dark/80' />
 				<div className='relative z-10 max-w-7xl mx-auto px-4 text-center text-white'>
 					<h1 className='text-4xl md:text-5xl font-bold mb-3'>
-						Make a Donation
+						{causeName ? `Donate to ${causeName}` : "Make a Donation"}
 					</h1>
-					<p className='text-white/60 text-sm'>Home / Donate</p>
+					<p className='text-white/60 text-sm'>
+						Home / {causeName ? causeName : "Donate"}
+					</p>
 				</div>
 			</section>
 
@@ -246,7 +258,9 @@ function DonateContent() {
 				<div className='max-w-xl mx-auto'>
 					<div className='bg-white rounded-2xl shadow-lg p-8'>
 						<h2 className='text-xl font-bold text-dark mb-2'>
-							Choose Your Donation Amount
+							{causeName
+								? `Donate to "${causeName}"`
+								: "Choose Your Donation Amount"}
 						</h2>
 						<p className='text-gray-500 text-sm mb-6'>
 							All donations are in USD. Your support changes lives.
