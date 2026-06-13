@@ -18,17 +18,17 @@ export async function autoSeed(): Promise<void> {
 		await connectDB();
 
 		// Admin user
-		const adminExists = await User.findOne({
-			email: "admin@motheroforphans.org",
-		});
-		if (!adminExists) {
+		const adminEmail = process.env.ADMIN_EMAIL || "admin@motheroforphans.org";
+		const adminPassword = process.env.ADMIN_PASSWORD || "ChangeMe123!";
+		const anyAdmin = await User.findOne({ role: "admin" });
+		if (!anyAdmin) {
 			await User.create({
-				email: "admin@motheroforphans.org",
-				password: process.env.ADMIN_PASSWORD || "ChangeMe123!",
+				email: adminEmail,
+				password: adminPassword,
 				name: "Admin",
 				role: "admin",
 			});
-			console.log("Admin user created");
+			console.log("Admin user created:", adminEmail);
 		}
 
 		// Site settings (logo, favicon, about, mission, vision, core values, team)

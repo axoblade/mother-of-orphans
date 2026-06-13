@@ -5,7 +5,7 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	name: string;
-	role: "admin" | "editor";
+	role: "admin" | "content_manager";
 	otpHash?: string;
 	otpExpiry?: Date;
 	createdAt: Date;
@@ -17,7 +17,7 @@ const UserSchema = new Schema<IUser>(
 		email: { type: String, required: true, unique: true, lowercase: true },
 		password: { type: String, required: true },
 		name: { type: String, required: true },
-		role: { type: String, enum: ["admin", "editor"], default: "editor" },
+		role: { type: String, enum: ["admin", "content_manager"], default: "content_manager" },
 		otpHash: { type: String },
 		otpExpiry: { type: Date },
 	},

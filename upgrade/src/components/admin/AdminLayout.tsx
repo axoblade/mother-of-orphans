@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
 	CalendarIcon,
 	HeartIcon,
@@ -9,6 +10,7 @@ import {
 	LogOutIcon,
 	MenuIcon,
 	MessageIcon,
+	UserIcon,
 	UsersIcon,
 } from "@/components/ui/Icons";
 import Link from "next/link";
@@ -36,7 +38,7 @@ const ChevronLeftIcon = ({ className }: { className?: string }) => (
 	</svg>
 );
 
-const navItems = [
+const navItems: { href: string; label: string; Icon: React.FC<{ className?: string }>; adminOnly?: boolean }[] = [
 	{ href: "/admin/dashboard", label: "Dashboard", Icon: LayoutIcon },
 	{ href: "/admin/sliders", label: "Sliders", Icon: SlideshowIcon },
 	{ href: "/admin/causes", label: "Causes", Icon: HeartIcon },
@@ -44,7 +46,8 @@ const navItems = [
 	{ href: "/admin/gallery", label: "Gallery", Icon: ImageIcon },
 	{ href: "/admin/team", label: "Team", Icon: UsersIcon },
 	{ href: "/admin/messages", label: "Messages", Icon: MessageIcon },
-	{ href: "/admin/settings", label: "Settings", Icon: SettingsIcon },
+	{ href: "/admin/users", label: "Users", Icon: UserIcon, adminOnly: true },
+	{ href: "/admin/settings", label: "Settings", Icon: SettingsIcon, adminOnly: true },
 ];
 
 const mobileItems = [
@@ -59,7 +62,7 @@ const mobileItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 	const pathname = usePathname();
-	const [user, setUser] = useState<{ email?: string } | null>(null);
+	const [user, setUser] = useState<{ email?: string; role?: string } | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [collapsed, setCollapsed] = useState(false);
 	const [logoUrl, setLogoUrl] = useState("/images/logo-white.png");
@@ -186,7 +189,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 					{/* Nav links */}
 					<nav className='flex-1 p-2 space-y-0.5 overflow-y-auto'>
-						{navItems.map(({ href, label, Icon }) => {
+						{navItems.filter((item) => !item.adminOnly || user?.role === "admin").map(({ href, label, Icon }) => {
 							const active = pathname === href;
 							return (
 								<Link
