@@ -6,6 +6,8 @@ export interface IUser extends Document {
 	password: string;
 	name: string;
 	role: "admin" | "editor";
+	otpHash?: string;
+	otpExpiry?: Date;
 	createdAt: Date;
 	comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -16,6 +18,8 @@ const UserSchema = new Schema<IUser>(
 		password: { type: String, required: true },
 		name: { type: String, required: true },
 		role: { type: String, enum: ["admin", "editor"], default: "editor" },
+		otpHash: { type: String },
+		otpExpiry: { type: Date },
 	},
 	{ timestamps: true },
 );

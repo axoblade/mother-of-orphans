@@ -121,11 +121,13 @@ export default async function Footer() {
 								{ href: "/causes", label: "Causes" },
 								{ href: "/events", label: "Upcoming Events" },
 								{ href: "/contact", label: "Contact us" },
+								{ href: "/admin", label: "Login", external: true },
 							].map((link) => (
 								<li key={link.href}>
 									<Link
 										href={link.href}
 										className='text-gray-300 hover:text-brand transition-colors hover:pl-1'
+										{...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
 									>
 										{link.label}
 									</Link>
@@ -167,10 +169,7 @@ export default async function Footer() {
 				{/* Bottom bar */}
 				<div className='mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-400'>
 					<p>
-						&copy; {new Date().getFullYear()} Mother of Orphans. All rights reserved.{" "}
-						<Link href='/admin' className='text-white/10 hover:text-white/30 transition-colors text-xs'>
-							Admin
-						</Link>
+						&copy; {new Date().getFullYear()} Mother of Orphans. All rights reserved.
 					</p>
 					{socialLinks.length > 0 && (
 						<div className='flex gap-4'>
