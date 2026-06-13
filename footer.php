@@ -9,23 +9,22 @@
                      <ul>
                          <li>Makindye Luwafu, Kampala (U)</li>
                          <li>P.O. Box 29202, <br>Kampala, Uganda.</li>
-                         <li><a href="mailto:info@shaniakigozimotheroforphans.org">info@shaniakigozimotheroforphans.org
-                             </a></li>
+                         <li><a href="mailto:info@shaniakigozimotheroforphans.org">info@shaniakigozimotheroforphans.org</a></li>
                      </ul>
                      <h3><a href="tel:+256701574447">+256 701 574 447</a></h3>
                      <h3><a href="tel:+256786224398">+256 786 224 398</a></h3>
                  </div>
-                 <!-- About Widget -->
+                 <!-- Quicklinks Widget -->
                  <div class="col-lg-3 col-md-6 about-widget footer-widget">
                      <h4 class="widget-title">Quicklinks</h4>
                      <ul>
-                         <li><a href="#">About us</a></li>
-                         <li><a href="#">Causes</a></li>
-                         <li><a href="#">Upcoming Events</a></li>
-                         <li><a href="#">Contact us</a></li>
+                         <li><a href="about-us.php">About us</a></li>
+                         <li><a href="causes.php">Causes</a></li>
+                         <li><a href="events.php">Upcoming Events</a></li>
+                         <li><a href="contact.php">Contact us</a></li>
                      </ul>
                  </div>
-                 <!-- Link Widget -->
+                 <!-- Partners Widget -->
                  <div class="col-lg-3 col-md-6 link-widget footer-widget">
                      <h4 class="widget-title">Our Partners</h4>
                      <ul>
@@ -39,10 +38,10 @@
                  <!-- Newsletter Widget -->
                  <div class="col-lg-3 col-md-6 newsletter-widget footer-widget">
                      <h4 class="widget-title">Newsletter</h4>
-                     <div class="text">Subscribe us and get latest news & <br>upcoming events.</div>
-                     <form action="#">
-                         <input type="email" placeholder="Emial Address...">
-                         <button class="submin-btn"><span class="flaticon-next"></span>Subscribe Us</button>
+                     <div class="text">Subscribe us and get latest news &amp; upcoming events.</div>
+                     <form action="#" method="post">
+                         <input type="email" placeholder="Email Address...">
+                         <button type="submit" class="submin-btn"><span class="flaticon-next"></span>Subscribe</button>
                      </form>
                  </div>
              </div>
@@ -50,8 +49,7 @@
          <div class="footer-bottom">
              <div class="left-content">
                  <div class="icon"><img src="images/logo-white.png" alt=""></div>
-                 <div class="copyright-text"><a href="index.php">Mother of Orphans</a>
-                 </div>
+                 <div class="copyright-text"><a href="index.php">Mother of Orphans</a></div>
              </div>
              <div class="right-content">
                  <ul class="social-icon-three">
@@ -68,16 +66,15 @@
  <!--Scroll to top-->
  <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon flaticon-arrow"></span></div>
 
+ <!-- Donate Popup -->
  <div id="donate-popup" class="donate-popup">
-
      <div class="popup-overlay"></div>
-
      <div class="donate-form-area">
          <div class="donate-form-wrapper">
              <div class="close-donate theme-btn"><span class="flaticon-close"></span></div>
              <div class="sec-title text-center">
-                 <h1>Donate us to achive our goal</h1>
-                 <div class="text">For what we give is what truely is ours</div>
+                 <h1>Donate us to achieve our goal</h1>
+                 <div class="text">For what we give is what truly is ours</div>
              </div>
 
              <form action="#" class="donate-form default-form">
@@ -95,21 +92,17 @@
                          <center>USD Account</center>
                          <label for="donate-amount-3" data-amount="50">600-6904-163</label>
                      </li>
-
                      <li>
                          <center>MTN</center>
                          <label for="donate-amount-3" data-amount="50">+256-786-224-398</label>
                      </li>
-
                      <li>
                          <center>Airtel</center>
                          <label for="donate-amount-3" data-amount="50">+256-701-574-447</label>
                      </li>
-
                  </ul>
 
                  <h3>Accounts Information</h3>
-
                  <div class="contact-form">
                      <div class="row clearfix">
                          <div class="col-md-6 col-sm-6 col-xs-12">
@@ -142,49 +135,40 @@
                              Absa Bank Limited<br>
                              Swift Code: <strong>ABSAZAJJ</strong>
                          </div>
-
                          <div class="col-md-12 col-sm-12 col-xs-12">
                              <strong>GBP Account</strong><br>
                              Barclays Bank PLC, London<br>
                              Swift Code: <strong>BARCGB22</strong>
                          </div>
-
                          <div class="col-md-12 col-sm-12 col-xs-12">
                              <strong>KES Account</strong><br>
                              Barclays Bank Kenya<br>
                              Swift Code: <strong>BARCKENX</strong>
                          </div>
-
                          <div class="col-md-12 col-sm-12 col-xs-12">
                              <strong>DKK Account</strong><br>
                              Nordea Bank A/S<br>
                              Swift Code: <strong>NDEADKKK</strong>
                          </div>
-
                          <div class="col-md-12 col-sm-12 col-xs-12">
                              <strong>CAD Account</strong><br>
                              Absa Bank Limited<br>
                              Swift Code: <strong>ABSAZAJJ</strong>
                          </div>
-
                          <div class="col-md-12 col-sm-12 col-xs-12">
                              <strong>TZS Account</strong><br>
                              Barclays Bank of Tanzania<br>
                              Swift Code: <strong>BARCTZTZ</strong>
                          </div>
-
                      </div>
                  </div>
              </form>
          </div>
-
      </div>
  </div>
 
  </div>
  <!--End pagewrapper-->
-
-
 
  <!-- JS -->
  <script src="js/jquery.js"></script>
