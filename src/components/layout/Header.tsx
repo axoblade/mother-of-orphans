@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface HeaderProps {
 	logoUrl?: string;
@@ -20,6 +20,16 @@ const navLinks = [
 export default function Header({ logoUrl = "/images/logo.png" }: HeaderProps) {
 	const pathname = usePathname();
 	const [mobileOpen, setMobileOpen] = useState(false);
+	const [pesapalActive, setPesapalActive] = useState(false);
+
+	useEffect(() => {
+		fetch("/api/plugins")
+			.then((r) => r.json())
+			.then((data) => setPesapalActive(data.plugins?.pesapal?.enabled ?? false))
+			.catch(() => {});
+	}, []);
+
+	const donateHref = pesapalActive ? "/donate" : "/contact";
 
 	return (
 		<header className='sticky top-0 z-50 bg-white shadow-sm'>
@@ -28,12 +38,15 @@ export default function Header({ logoUrl = "/images/logo.png" }: HeaderProps) {
 				<div className='max-w-7xl mx-auto px-4 flex justify-between items-center'>
 					<span>
 						We only have what we give...{" "}
-						<Link href='/contact' className='underline font-semibold'>
+						<Link href={donateHref} className='underline font-semibold'>
 							Donate Now.
 						</Link>
 					</span>
 					<div className='flex items-center gap-4'>
-						<a href='mailto:info@motheroforphans.org' className='hover:underline'>
+						<a
+							href='mailto:info@motheroforphans.org'
+							className='hover:underline'
+						>
 							info@motheroforphans.org
 						</a>
 						<a href='tel:+256786224398' className='hover:underline'>
@@ -70,7 +83,7 @@ export default function Header({ logoUrl = "/images/logo.png" }: HeaderProps) {
 							</Link>
 						))}
 						<Link
-							href='/contact'
+							href={donateHref}
 							className='ml-3 px-6 py-2.5 bg-brand text-white rounded-full text-sm font-semibold hover:bg-brand-dark transition-colors shadow-md'
 						>
 							Donate
@@ -83,11 +96,26 @@ export default function Header({ logoUrl = "/images/logo.png" }: HeaderProps) {
 						className='md:hidden p-2 text-dark'
 						aria-label='Toggle menu'
 					>
-						<svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+						<svg
+							className='w-6 h-6'
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
 							{mobileOpen ? (
-								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth={2}
+									d='M6 18L18 6M6 6l12 12'
+								/>
 							) : (
-								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 6h16M4 12h16M4 18h16' />
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth={2}
+									d='M4 6h16M4 12h16M4 18h16'
+								/>
 							)}
 						</svg>
 					</button>
@@ -113,7 +141,7 @@ export default function Header({ logoUrl = "/images/logo.png" }: HeaderProps) {
 							</Link>
 						))}
 						<Link
-							href='/contact'
+							href={donateHref}
 							onClick={() => setMobileOpen(false)}
 							className='block mt-2 text-center px-6 py-2.5 bg-brand text-white rounded-full text-base font-semibold'
 						>

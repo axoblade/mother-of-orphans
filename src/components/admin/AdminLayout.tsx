@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
 	CalendarIcon,
 	HeartIcon,
@@ -14,18 +13,34 @@ import {
 	UsersIcon,
 } from "@/components/ui/Icons";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const SettingsIcon = ({ className }: { className?: string }) => (
-	<svg className={className || "w-5 h-5"} fill='none' stroke='currentColor' strokeWidth={2} viewBox='0 0 24 24' strokeLinecap='round' strokeLinejoin='round'>
+	<svg
+		className={className || "w-5 h-5"}
+		fill='none'
+		stroke='currentColor'
+		strokeWidth={2}
+		viewBox='0 0 24 24'
+		strokeLinecap='round'
+		strokeLinejoin='round'
+	>
 		<circle cx='12' cy='12' r='3' />
 		<path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z' />
 	</svg>
 );
 
 const SlideshowIcon = ({ className }: { className?: string }) => (
-	<svg className={className || "w-5 h-5"} fill='none' stroke='currentColor' strokeWidth={2} viewBox='0 0 24 24' strokeLinecap='round' strokeLinejoin='round'>
+	<svg
+		className={className || "w-5 h-5"}
+		fill='none'
+		stroke='currentColor'
+		strokeWidth={2}
+		viewBox='0 0 24 24'
+		strokeLinecap='round'
+		strokeLinejoin='round'
+	>
 		<rect x='2' y='7' width='20' height='10' rx='2' />
 		<path d='M17 2l5 5-5 5' />
 		<path d='M7 2L2 7l5 5' />
@@ -33,12 +48,40 @@ const SlideshowIcon = ({ className }: { className?: string }) => (
 );
 
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
-	<svg className={className || "w-5 h-5"} fill='none' stroke='currentColor' strokeWidth={2} viewBox='0 0 24 24' strokeLinecap='round' strokeLinejoin='round'>
+	<svg
+		className={className || "w-5 h-5"}
+		fill='none'
+		stroke='currentColor'
+		strokeWidth={2}
+		viewBox='0 0 24 24'
+		strokeLinecap='round'
+		strokeLinejoin='round'
+	>
 		<path d='M15 18l-6-6 6-6' />
 	</svg>
 );
 
-const navItems: { href: string; label: string; Icon: React.FC<{ className?: string }>; adminOnly?: boolean }[] = [
+const DollarIcon = ({ className }: { className?: string }) => (
+	<svg
+		className={className || "w-5 h-5"}
+		fill='none'
+		stroke='currentColor'
+		strokeWidth={2}
+		viewBox='0 0 24 24'
+		strokeLinecap='round'
+		strokeLinejoin='round'
+	>
+		<line x1='12' y1='1' x2='12' y2='23' />
+		<path d='M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
+	</svg>
+);
+
+const navItems: {
+	href: string;
+	label: string;
+	Icon: React.FC<{ className?: string }>;
+	adminOnly?: boolean;
+}[] = [
 	{ href: "/admin/dashboard", label: "Dashboard", Icon: LayoutIcon },
 	{ href: "/admin/sliders", label: "Sliders", Icon: SlideshowIcon },
 	{ href: "/admin/causes", label: "Causes", Icon: HeartIcon },
@@ -46,8 +89,19 @@ const navItems: { href: string; label: string; Icon: React.FC<{ className?: stri
 	{ href: "/admin/gallery", label: "Gallery", Icon: ImageIcon },
 	{ href: "/admin/team", label: "Team", Icon: UsersIcon },
 	{ href: "/admin/messages", label: "Messages", Icon: MessageIcon },
+	{
+		href: "/admin/donations",
+		label: "Donations",
+		Icon: DollarIcon,
+		adminOnly: true,
+	},
 	{ href: "/admin/users", label: "Users", Icon: UserIcon, adminOnly: true },
-	{ href: "/admin/settings", label: "Settings", Icon: SettingsIcon, adminOnly: true },
+	{
+		href: "/admin/settings",
+		label: "Settings",
+		Icon: SettingsIcon,
+		adminOnly: true,
+	},
 ];
 
 const mobileItems = [
@@ -59,10 +113,16 @@ const mobileItems = [
 	{ href: "/admin/settings", Icon: SettingsIcon },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	const router = useRouter();
 	const pathname = usePathname();
-	const [user, setUser] = useState<{ email?: string; role?: string } | null>(null);
+	const [user, setUser] = useState<{ email?: string; role?: string } | null>(
+		null,
+	);
 	const [loading, setLoading] = useState(true);
 	const [collapsed, setCollapsed] = useState(false);
 	const [logoUrl, setLogoUrl] = useState("/images/logo-white.png");
@@ -123,7 +183,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 						</Link>
 					</span>
 					<div className='flex items-center gap-4'>
-						<a href='mailto:info@motheroforphans.org' className='hover:underline'>
+						<a
+							href='mailto:info@motheroforphans.org'
+							className='hover:underline'
+						>
 							info@motheroforphans.org
 						</a>
 						<a href='tel:+256786224398' className='hover:underline'>
@@ -189,30 +252,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 					{/* Nav links */}
 					<nav className='flex-1 p-2 space-y-0.5 overflow-y-auto'>
-						{navItems.filter((item) => !item.adminOnly || user?.role === "admin").map(({ href, label, Icon }) => {
-							const active = pathname === href;
-							return (
-								<Link
-									key={href}
-									href={href}
-									title={collapsed ? label : undefined}
-									className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-										active
-											? "bg-white/15 text-white"
-											: "text-white/70 hover:bg-white/10 hover:text-white"
-									} ${collapsed ? "justify-center" : ""}`}
-								>
-									<Icon className='w-4 h-4 shrink-0' />
-									{!collapsed && <span className='truncate'>{label}</span>}
-								</Link>
-							);
-						})}
+						{navItems
+							.filter((item) => !item.adminOnly || user?.role === "admin")
+							.map(({ href, label, Icon }) => {
+								const active = pathname === href;
+								return (
+									<Link
+										key={href}
+										href={href}
+										title={collapsed ? label : undefined}
+										className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+											active
+												? "bg-white/15 text-white"
+												: "text-white/70 hover:bg-white/10 hover:text-white"
+										} ${collapsed ? "justify-center" : ""}`}
+									>
+										<Icon className='w-4 h-4 shrink-0' />
+										{!collapsed && <span className='truncate'>{label}</span>}
+									</Link>
+								);
+							})}
 					</nav>
 
 					{/* Sidebar footer / sign-out */}
-					<div className={`border-t border-white/10 ${collapsed ? "p-3" : "p-4"}`}>
+					<div
+						className={`border-t border-white/10 ${collapsed ? "p-3" : "p-4"}`}
+					>
 						{!collapsed && (
-							<p className='text-white/50 text-xs truncate mb-2'>{user?.email}</p>
+							<p className='text-white/50 text-xs truncate mb-2'>
+								{user?.email}
+							</p>
 						)}
 						<button
 							onClick={handleLogout}

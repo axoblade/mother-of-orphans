@@ -23,6 +23,7 @@ export interface ISiteSettings extends Document {
 	socialTwitter: string;
 	socialYoutube: string;
 	socialWhatsapp: string;
+	plugins: { pesapal: boolean };
 }
 
 const SiteSettingsSchema = new Schema<ISiteSettings>(
@@ -63,18 +64,44 @@ const SiteSettingsSchema = new Schema<ISiteSettings>(
 		coreValues: {
 			type: [{ title: { type: String }, description: { type: String } }],
 			default: [
-				{ title: "Compassion", description: "We care and act to alleviate suffering and improve lives." },
-				{ title: "Integrity", description: "We are transparent, honest, and accountable in all we do." },
-				{ title: "Inclusivity", description: "We serve all people regardless of background or belief." },
-				{ title: "Sustainability", description: "We create lasting change through empowerment and education." },
+				{
+					title: "Compassion",
+					description:
+						"We care and act to alleviate suffering and improve lives.",
+				},
+				{
+					title: "Integrity",
+					description:
+						"We are transparent, honest, and accountable in all we do.",
+				},
+				{
+					title: "Inclusivity",
+					description:
+						"We serve all people regardless of background or belief.",
+				},
+				{
+					title: "Sustainability",
+					description:
+						"We create lasting change through empowerment and education.",
+				},
 			],
 		},
 		teamMembers: {
-			type: [{ name: { type: String }, role: { type: String }, image: { type: String } }],
+			type: [
+				{
+					name: { type: String },
+					role: { type: String },
+					image: { type: String },
+				},
+			],
 			default: [
 				{ name: "Ms Nalumansi Sania", role: "Founder and Director", image: "" },
 				{ name: "Nalumansi Faridah Kirabo", role: "Treasurer", image: "" },
-				{ name: "Nalumansi Hamidah Kirabo", role: "Programs Manager", image: "" },
+				{
+					name: "Nalumansi Hamidah Kirabo",
+					role: "Programs Manager",
+					image: "",
+				},
 			],
 		},
 		ctaTitle: { type: String, default: "Together We Can Make a Difference" },
@@ -88,6 +115,10 @@ const SiteSettingsSchema = new Schema<ISiteSettings>(
 		socialTwitter: { type: String, default: "" },
 		socialYoutube: { type: String, default: "" },
 		socialWhatsapp: { type: String, default: "" },
+		plugins: {
+			type: { pesapal: { type: Boolean, default: false } },
+			default: { pesapal: false },
+		},
 	},
 	{ timestamps: true },
 );

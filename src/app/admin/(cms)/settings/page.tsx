@@ -14,7 +14,9 @@ interface CoreValue {
 }
 
 export default function AdminSettings() {
-	const [settings, setSettings] = useState<Record<string, unknown> | null>(null);
+	const [settings, setSettings] = useState<Record<string, unknown> | null>(
+		null,
+	);
 	const [saved, setSaved] = useState(false);
 
 	useEffect(() => {
@@ -47,7 +49,11 @@ export default function AdminSettings() {
 		});
 	}
 
-	function updateCoreValue(index: number, field: "title" | "description", value: string) {
+	function updateCoreValue(
+		index: number,
+		field: "title" | "description",
+		value: string,
+	) {
 		setSettings((prev) => {
 			if (!prev) return null;
 			const coreValues = [...((prev.coreValues as CoreValue[]) || [])];
@@ -59,7 +65,10 @@ export default function AdminSettings() {
 	function addCoreValue() {
 		setSettings((prev) => {
 			if (!prev) return null;
-			const coreValues = [...((prev.coreValues as CoreValue[]) || []), { title: "", description: "" }];
+			const coreValues = [
+				...((prev.coreValues as CoreValue[]) || []),
+				{ title: "", description: "" },
+			];
 			return { ...prev, coreValues };
 		});
 	}
@@ -67,7 +76,9 @@ export default function AdminSettings() {
 	function removeCoreValue(index: number) {
 		setSettings((prev) => {
 			if (!prev) return null;
-			const coreValues = ((prev.coreValues as CoreValue[]) || []).filter((_, i) => i !== index);
+			const coreValues = ((prev.coreValues as CoreValue[]) || []).filter(
+				(_, i) => i !== index,
+			);
 			return { ...prev, coreValues };
 		});
 	}
@@ -113,7 +124,8 @@ export default function AdminSettings() {
 									label='Logo White (light background use)'
 								/>
 								<p className='text-xs text-gray-400 mt-1'>
-									Current: {(settings.logoWhite as string) || "/images/logo-white.png"}
+									Current:{" "}
+									{(settings.logoWhite as string) || "/images/logo-white.png"}
 								</p>
 							</div>
 						</div>
@@ -159,7 +171,9 @@ export default function AdminSettings() {
 							rows={4}
 						/>
 						<div>
-							<p className='text-sm text-gray-500 mb-2'>About Page Image (hero / side image)</p>
+							<p className='text-sm text-gray-500 mb-2'>
+								About Page Image (hero / side image)
+							</p>
 							<ImageUpload
 								key='aboutImage'
 								onUpload={(result) => update("aboutImage", result.url)}
@@ -172,7 +186,10 @@ export default function AdminSettings() {
 							<ImageUpload
 								key='contactBannerImage'
 								onUpload={(result) => update("contactBannerImage", result.url)}
-								currentImage={(settings.contactBannerImage as string) || "/images/page-banner.jpg"}
+								currentImage={
+									(settings.contactBannerImage as string) ||
+									"/images/page-banner.jpg"
+								}
 								label='Contact Banner'
 							/>
 						</div>
@@ -231,7 +248,9 @@ export default function AdminSettings() {
 									<input
 										placeholder='Value Title (e.g. Compassion)'
 										value={val.title}
-										onChange={(e) => updateCoreValue(i, "title", e.target.value)}
+										onChange={(e) =>
+											updateCoreValue(i, "title", e.target.value)
+										}
 										className='flex-1 px-3 py-2 border rounded-lg text-sm font-medium'
 									/>
 									<button
@@ -245,7 +264,9 @@ export default function AdminSettings() {
 								<textarea
 									placeholder='Description'
 									value={val.description}
-									onChange={(e) => updateCoreValue(i, "description", e.target.value)}
+									onChange={(e) =>
+										updateCoreValue(i, "description", e.target.value)
+									}
 									className='w-full px-3 py-2 border rounded-lg text-sm'
 									rows={2}
 								/>
@@ -274,16 +295,23 @@ export default function AdminSettings() {
 					{/* Social Links */}
 					<section className='bg-white rounded-xl p-6 shadow-sm space-y-4'>
 						<h2 className='font-bold text-lg text-dark'>Social Links</h2>
-						<p className='text-sm text-gray-400'>Leave blank to hide a link in the footer.</p>
+						<p className='text-sm text-gray-400'>
+							Leave blank to hide a link in the footer.
+						</p>
 						{[
 							{ key: "socialFacebook", label: "Facebook URL" },
 							{ key: "socialInstagram", label: "Instagram URL" },
 							{ key: "socialTwitter", label: "Twitter / X URL" },
 							{ key: "socialYoutube", label: "YouTube URL" },
-							{ key: "socialWhatsapp", label: "WhatsApp number (e.g. +256701574447)" },
+							{
+								key: "socialWhatsapp",
+								label: "WhatsApp number (e.g. +256701574447)",
+							},
 						].map(({ key, label }) => (
 							<div key={key}>
-								<label className='block text-xs text-gray-500 mb-1'>{label}</label>
+								<label className='block text-xs text-gray-500 mb-1'>
+									{label}
+								</label>
 								<input
 									placeholder={label}
 									value={(settings[key] as string) || ""}
@@ -293,8 +321,57 @@ export default function AdminSettings() {
 							</div>
 						))}
 					</section>
+					{/* Plugins */}
+					<section className='bg-white rounded-xl p-6 shadow-sm space-y-4'>
+						<h2 className='font-bold text-lg text-dark'>Plugins</h2>
+						<p className='text-sm text-gray-400'>
+							Plugin availability is automatically detected from environment
+							configuration.
+						</p>
+						<PluginStatus />
+					</section>
 				</form>
 			</div>
+		</div>
+	);
+}
+
+function PluginStatus() {
+	const [plugins, setPlugins] = useState<{
+		pesapal?: { enabled: boolean; name: string; description: string };
+	} | null>(null);
+
+	useEffect(() => {
+		fetch("/api/plugins")
+			.then((r) => r.json())
+			.then((data) => setPlugins(data.plugins))
+			.catch(() => {});
+	}, []);
+
+	if (!plugins)
+		return <p className='text-sm text-gray-400'>Loading plugin status...</p>;
+
+	return (
+		<div className='space-y-3'>
+			{plugins.pesapal && (
+				<div className='flex items-center justify-between p-4 border rounded-lg'>
+					<div>
+						<p className='font-semibold text-dark'>{plugins.pesapal.name}</p>
+						<p className='text-sm text-gray-400'>
+							{plugins.pesapal.description}
+						</p>
+					</div>
+					<span
+						className={`px-3 py-1 rounded-full text-xs font-semibold ${
+							plugins.pesapal.enabled
+								? "bg-green-100 text-green-700"
+								: "bg-gray-100 text-gray-400"
+						}`}
+					>
+						{plugins.pesapal.enabled ? "Active" : "Inactive"}
+					</span>
+				</div>
+			)}
 		</div>
 	);
 }
