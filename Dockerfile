@@ -1,17 +1,38 @@
-FROM php:8.2-apache
+# Stage 1 - install deps
+FROM node:20-alpine AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci
 
-# Keep Apache document root on /var/www/html (default).
-WORKDIR /var/www/html
+# Stage 2 - build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
 
-# Enable rewrite rules used in .htaccess.
-RUN a2enmod rewrite
+# Stage 3 - production runner (lean image)
+FROM node:20-alpine AS runner
+WORKDIR /app
 
-# Copy site files into the container.
-COPY . /var/www/html/
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Set sane read permissions for web assets.
-RUN chown -R www-data:www-data /var/www/html \
-    && find /var/www/html -type d -exec chmod 755 {} \; \
-    && find /var/www/html -type f -exec chmod 644 {} \;
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser  --system --uid 1001 nextjs
 
-EXPOSE 80
+COPY --from=builder /app/public ./public
+RUN mkdir .next && chown nextjs:nodejs .next
+
+# standalone output bundles only what the app needs
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static    ./.next/static
+
+USER nextjs
+#EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]
