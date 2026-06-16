@@ -12,6 +12,14 @@ const PRESET_AMOUNTS = [
 	{ label: "$500", value: 500 },
 ];
 
+function sanitizeText(value: string): string {
+	return value.replace(/[^a-zA-Z0-9\s]/g, "");
+}
+
+function sanitizePhone(value: string): string {
+	return value.replace(/\D/g, "");
+}
+
 function DonateContent() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -83,15 +91,19 @@ function DonateContent() {
 
 		setLoading(true);
 		try {
+			const cleanDonorName = sanitizeText(donorName).trim();
+			const cleanDonorEmail = donorEmail.trim();
+			const cleanDonorPhone = sanitizePhone(donorPhone);
+
 			const res = await fetch("/api/donate", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					amount: selectedAmount,
 					currency: "USD",
-					donorName: donorName || undefined,
-					donorEmail: donorEmail || undefined,
-					donorPhone: donorPhone || undefined,
+					donorName: cleanDonorName || undefined,
+					donorEmail: cleanDonorEmail || undefined,
+					donorPhone: cleanDonorPhone || undefined,
 					description: causeName
 						? `Donation to "${causeName}" - $${selectedAmount}`
 						: `Donation to Mother of Orphans - $${selectedAmount}`,
@@ -341,7 +353,7 @@ function DonateContent() {
 									<input
 										type='text'
 										value={donorName}
-										onChange={(e) => setDonorName(e.target.value)}
+										onChange={(e) => setDonorName(sanitizeText(e.target.value))}
 										className='w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand'
 										placeholder='John Doe'
 									/>
@@ -365,9 +377,9 @@ function DonateContent() {
 									<input
 										type='tel'
 										value={donorPhone}
-										onChange={(e) => setDonorPhone(e.target.value)}
+										onChange={(e) => setDonorPhone(sanitizePhone(e.target.value))}
 										className='w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand'
-										placeholder='+256 700 000000'
+										placeholder='256700000000'
 									/>
 								</div>
 							</div>

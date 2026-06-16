@@ -8,6 +8,14 @@ function generateRef(): string {
 	return `MOP-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 }
 
+function sanitizeText(value: string): string {
+	return value.replace(/[^a-zA-Z0-9\s]/g, "").trim();
+}
+
+function sanitizePhone(value: string): string {
+	return value.replace(/\D/g, "").trim();
+}
+
 export async function POST(req: NextRequest) {
 	if (!isPesaPalConfigured()) {
 		return NextResponse.json(
@@ -29,6 +37,13 @@ export async function POST(req: NextRequest) {
 			description = "Donation to Mother of Orphans",
 		} = body;
 
+		const normalizedDonorName =
+			typeof donorName === "string" ? sanitizeText(donorName) : undefined;
+		const normalizedDonorEmail =
+			typeof donorEmail === "string" ? donorEmail.trim() : undefined;
+		const normalizedDonorPhone =
+			typeof donorPhone === "string" ? sanitizePhone(donorPhone) : undefined;
+
 		if (!amount || typeof amount !== "number" || amount <= 0) {
 			return NextResponse.json(
 				{ error: "A valid donation amount is required" },
@@ -48,10 +63,10 @@ export async function POST(req: NextRequest) {
 			redirect_url: `${baseUrl}/donate?status=complete&ref=${merchantReference}`,
 			cancellation_url: `${baseUrl}/donate?status=cancelled&ref=${merchantReference}`,
 			billing_address: {
-				email_address: donorEmail,
-				phone_number: donorPhone,
-				first_name: donorName?.split(" ")[0],
-				last_name: donorName?.split(" ").slice(1).join(" "),
+				email_address: normalizedDonorEmail,
+				phone_number: normalizedDonorPhone,
+				first_name: normalizedDonorName?.split(" ")[0],
+				last_name: normalizedDonorName?.split(" ").slice(1).join(" "),
 			},
 		});
 
@@ -63,9 +78,9 @@ export async function POST(req: NextRequest) {
 			currency,
 			status: "PENDING",
 			description,
-			donorName,
-			donorEmail,
-			donorPhone,
+			donorName: normalizedDonorName,
+			donorEmail: normalizedDonorEmail,
+			donorPhone: normalizedDonorPhone,
 		});
 
 		return NextResponse.json({
