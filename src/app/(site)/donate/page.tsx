@@ -377,7 +377,9 @@ function DonateContent() {
 									<input
 										type='tel'
 										value={donorPhone}
-										onChange={(e) => setDonorPhone(sanitizePhone(e.target.value))}
+										onChange={(e) =>
+											setDonorPhone(sanitizePhone(e.target.value))
+										}
 										className='w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand'
 										placeholder='256700000000'
 									/>
